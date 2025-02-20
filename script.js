@@ -6,34 +6,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const taskInput = document.getElementById("taskInput");
     const taskList = document.getElementById("taskList");
 
-    // Mostrar modal
-    addTaskBtn.addEventListener("click", () => {
+    // Función para abrir el modal
+    function openModal() {
+        taskModal.style.display = "flex";
         taskModal.style.visibility = "visible";
         taskModal.style.opacity = "1";
         taskInput.focus();
-    });
+    }
 
-    // Cerrar modal
+    // Función para cerrar el modal
     function closeModalFunc() {
         taskModal.style.visibility = "hidden";
         taskModal.style.opacity = "0";
+        setTimeout(() => {
+            taskModal.style.display = "none"; // Ocultar completamente después de la animación
+        }, 200);
     }
 
+    // Mostrar el modal al hacer clic en el botón
+    addTaskBtn.addEventListener("click", openModal);
+
+    // Cerrar el modal al hacer clic en la "X"
     closeModal.addEventListener("click", closeModalFunc);
 
+    // Cerrar modal al hacer clic fuera de él
     window.addEventListener("click", (e) => {
         if (e.target === taskModal) {
             closeModalFunc();
         }
     });
 
+    // Cerrar modal con la tecla "Esc"
     window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
             closeModalFunc();
         }
     });
 
-    // Agregar tarea
+    // Función para añadir una tarea
     function addTask() {
         const taskText = taskInput.value.trim();
         if (taskText === "") return;
@@ -48,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const li = document.createElement("li");
         li.innerHTML = `${taskText} <button class="delete">X</button>`;
 
-        // Eliminar tarea
+        // Eliminar tarea al hacer clic en "X"
         li.querySelector(".delete").addEventListener("click", () => li.remove());
 
         taskList.appendChild(li);
