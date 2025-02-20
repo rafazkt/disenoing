@@ -6,54 +6,60 @@ document.addEventListener("DOMContentLoaded", () => {
     const taskInput = document.getElementById("taskInput");
     const taskList = document.getElementById("taskList");
 
-    // Asegurar que el modal aparece correctamente
+    // Mostrar modal
     addTaskBtn.addEventListener("click", () => {
-        taskModal.style.display = "flex";
-        taskInput.value = ""; // Limpiar input
+        taskModal.style.visibility = "visible";
+        taskModal.style.opacity = "1";
         taskInput.focus();
     });
 
-    closeModal.addEventListener("click", () => {
-        taskModal.style.display = "none";
-    });
+    // Cerrar modal
+    function closeModalFunc() {
+        taskModal.style.visibility = "hidden";
+        taskModal.style.opacity = "0";
+    }
+
+    closeModal.addEventListener("click", closeModalFunc);
 
     window.addEventListener("click", (e) => {
         if (e.target === taskModal) {
-            taskModal.style.display = "none";
+            closeModalFunc();
         }
     });
+
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            closeModalFunc();
+        }
+    });
+
+    // Agregar tarea
+    function addTask() {
+        const taskText = taskInput.value.trim();
+        if (taskText === "") return;
+
+        // Verificar si la tarea ya existe
+        const existingTasks = Array.from(taskList.children).map(li => li.textContent.replace("X", "").trim());
+        if (existingTasks.includes(taskText)) {
+            alert("Esta tarea ya existe.");
+            return;
+        }
+
+        const li = document.createElement("li");
+        li.innerHTML = `${taskText} <button class="delete">X</button>`;
+
+        // Eliminar tarea
+        li.querySelector(".delete").addEventListener("click", () => li.remove());
+
+        taskList.appendChild(li);
+        taskInput.value = "";
+        closeModalFunc();
+        addTaskBtn.focus(); // Mejor UX
+    }
 
     saveTaskBtn.addEventListener("click", addTask);
 
-    // Permitir añadir con Enter
     taskInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            addTask();
-        }
-    });
-
-    function addTask() {
-        const taskText = taskInput.value.trim();
-        if (taskText) {
-            const li = document.createElement("li");
-            li.innerHTML = `${taskText} <button class="delete">X</button>`;
-            
-            // Eliminar tarea
-            li.querySelector(".delete").addEventListener("click", () => {
-                li.remove();
-            });
-
-            taskList.appendChild(li);
-            taskInput.value = "";
-            taskModal.style.display = "none";
-        }
-    }
-
-    // Cerrar modal con Esc
-    window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-            taskModal.style.display = "none";
-        }
+        if (e.key === "Enter") addTask();
     });
 });
-
