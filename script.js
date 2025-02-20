@@ -6,8 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const taskInput = document.getElementById("taskInput");
     const taskList = document.getElementById("taskList");
 
+    // Asegurar que el modal aparece correctamente
     addTaskBtn.addEventListener("click", () => {
         taskModal.style.display = "flex";
+        taskInput.value = ""; // Limpiar input
         taskInput.focus();
     });
 
@@ -21,22 +23,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    saveTaskBtn.addEventListener("click", () => {
+    saveTaskBtn.addEventListener("click", addTask);
+
+    // Permitir añadir con Enter
+    taskInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            addTask();
+        }
+    });
+
+    function addTask() {
         const taskText = taskInput.value.trim();
         if (taskText) {
             const li = document.createElement("li");
             li.innerHTML = `${taskText} <button class="delete">X</button>`;
+            
+            // Eliminar tarea
             li.querySelector(".delete").addEventListener("click", () => {
                 li.remove();
             });
+
             taskList.appendChild(li);
             taskInput.value = "";
             taskModal.style.display = "none";
         }
-    });
+    }
 
-    // Accesibilidad: Tecla "Enter" para agregar tareas
-    taskInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            saveTaskBtn.click();
+    // Cerrar modal con Esc
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            taskModal.style.display = "none";
         }
+    });
+});
+
