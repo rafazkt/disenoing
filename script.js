@@ -1,29 +1,28 @@
-document.getElementById('addTaskButton').addEventListener('click', function() {
-  const taskInput = document.getElementById('taskInput');
-  const taskText = taskInput.value.trim();
+// script.js
+const taskList = document.getElementById('task-list');
+const addTaskButton = document.getElementById('add-task-button');
 
-  if (taskText === '') {
-    alert('Por favor, ingresa una tarea.');
-    return;
-  }
-
-  // Crear una nueva tarea
-  const li = document.createElement('li');
-  li.textContent = taskText;
-
-  // Crear botón de eliminar
-  const deleteButton = document.createElement('button');
-  deleteButton.textContent = 'Eliminar';
-  deleteButton.addEventListener('click', function() {
-    li.remove();
-  });
-
-  // Añadir el botón de eliminar a la tarea
-  li.appendChild(deleteButton);
-
-  // Añadir la tarea al listado
-  document.getElementById('taskList').appendChild(li);
-
-  // Limpiar el campo de entrada
-  taskInput.value = '';
+addTaskButton.addEventListener('click', () => {
+  // Aquí se abriría la pantalla de edición
+  alert('Abrir pantalla de edición');
 });
+
+// Ejemplo de cómo añadir una tarea a la lista
+function addTask(task) {
+  const li = document.createElement('li');
+  li.innerHTML = `
+    <input type="checkbox">
+    <span>${task.title}</span>
+    <button>Editar</button>
+    <button>Eliminar</button>
+  `;
+  taskList.appendChild(li);
+}
+
+// Ejemplo de datos de tareas (simulado)
+const tasks = [
+  { title: 'Hacer la compra', completed: false },
+  { title: 'Llamar al médico', completed: true },
+];
+
+tasks.forEach(task => addTask(task));
