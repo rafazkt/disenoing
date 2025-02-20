@@ -1,28 +1,42 @@
-// script.js
-const taskList = document.getElementById('task-list');
-const addTaskButton = document.getElementById('add-task-button');
+document.addEventListener("DOMContentLoaded", () => {
+    const addTaskBtn = document.getElementById("addTaskBtn");
+    const taskModal = document.getElementById("taskModal");
+    const closeModal = document.querySelector(".close");
+    const saveTaskBtn = document.getElementById("saveTaskBtn");
+    const taskInput = document.getElementById("taskInput");
+    const taskList = document.getElementById("taskList");
 
-addTaskButton.addEventListener('click', () => {
-  // Aquí se abriría la pantalla de edición
-  alert('Abrir pantalla de edición');
-});
+    addTaskBtn.addEventListener("click", () => {
+        taskModal.style.display = "flex";
+        taskInput.focus();
+    });
 
-// Ejemplo de cómo añadir una tarea a la lista
-function addTask(task) {
-  const li = document.createElement('li');
-  li.innerHTML = `
-    <input type="checkbox">
-    <span>${task.title}</span>
-    <button>Editar</button>
-    <button>Eliminar</button>
-  `;
-  taskList.appendChild(li);
-}
+    closeModal.addEventListener("click", () => {
+        taskModal.style.display = "none";
+    });
 
-// Ejemplo de datos de tareas (simulado)
-const tasks = [
-  { title: 'Hacer la compra', completed: false },
-  { title: 'Llamar al médico', completed: true },
-];
+    window.addEventListener("click", (e) => {
+        if (e.target === taskModal) {
+            taskModal.style.display = "none";
+        }
+    });
 
-tasks.forEach(task => addTask(task));
+    saveTaskBtn.addEventListener("click", () => {
+        const taskText = taskInput.value.trim();
+        if (taskText) {
+            const li = document.createElement("li");
+            li.innerHTML = `${taskText} <button class="delete">X</button>`;
+            li.querySelector(".delete").addEventListener("click", () => {
+                li.remove();
+            });
+            taskList.appendChild(li);
+            taskInput.value = "";
+            taskModal.style.display = "none";
+        }
+    });
+
+    // Accesibilidad: Tecla "Enter" para agregar tareas
+    taskInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            saveTaskBtn.click();
+        }
